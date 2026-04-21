@@ -17,6 +17,19 @@ export default function Scanner({ events, onMatch, onNoMatch }) {
         html5Qr = new Html5Qrcode(scannerId)
         scannerRef.current = html5Qr
 
+        const handleDecoded = async (decodedText) => {
+          if (cooldownRef.current) return
+          cooldownRef.current = true
+          setLastResult(decodedText)
+
+          const found = await onMatch(decodedText)
+          if (!found) onNoMatch()
+
+          setTimeout(() => {
+            cooldownRef.current = false
+          }, 2000)
+        }
+
         await html5Qr.start(
           { facingMode: 'environment' },
           {
@@ -25,16 +38,7 @@ export default function Scanner({ events, onMatch, onNoMatch }) {
             aspectRatio: 1.0,
           },
           (decodedText) => {
-            if (cooldownRef.current) return
-            cooldownRef.current = true
-            setLastResult(decodedText)
-
-            const found = onMatch(decodedText)
-            if (!found) onNoMatch()
-
-            setTimeout(() => {
-              cooldownRef.current = false
-            }, 2000)
+            void handleDecoded(decodedText)
           },
           () => {} // ignore errors during scanning
         )

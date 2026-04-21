@@ -12,13 +12,17 @@ A simple web app that generates QR codes for events and counts scans.
 - Scan QR codes with the built-in camera scanner
 - Track scan counts per event
 - Manual +1 counter as a fallback
-- Data persists in localStorage
+- Data persists in Supabase (or localStorage fallback)
 
 ## Getting Started
 
 ```bash
 # Install dependencies
 npm install
+
+# Copy env template and add your Supabase keys
+# Windows PowerShell: Copy-Item .env.example .env
+# macOS/Linux: cp .env.example .env
 
 # Start dev server
 npm run dev
@@ -32,11 +36,63 @@ npm run build
 - React 18 + Vite
 - [qrcode](https://www.npmjs.com/package/qrcode) for QR generation
 - [html5-qrcode](https://www.npmjs.com/package/html5-qrcode) for camera scanning
-- localStorage for persistence
+- [Supabase](https://supabase.com/) for persistence
+
+## Supabase Setup
+
+1. Create a Supabase project.
+2. Open SQL Editor and run:
+
+```sql
+create table if not exists public.events (
+    id text primary key,
+    name text not null,
+    url text not null,
+    scan_count integer not null default 0,
+    created_at timestamptz not null default now()
+);
+
+alter table public.events enable row level security;
+
+create policy "Public read events"
+on public.events
+for select
+to anon
+using (true);
+
+create policy "Public insert events"
+on public.events
+for insert
+to anon
+with check (true);
+
+create policy "Public update events"
+on public.events
+for update
+to anon
+using (true)
+with check (true);
+
+create policy "Public delete events"
+on public.events
+for delete
+to anon
+using (true);
+```
+
+3. Copy `.env.example` to `.env`.
+4. Set:
+
+```bash
+VITE_SUPABASE_URL=your_project_url
+VITE_SUPABASE_ANON_KEY=your_anon_key
+```
+
+If env vars are missing or Supabase is unavailable, the app automatically falls back to localStorage.
 
 ## Deployment
 
-Build and deploy the `dist/` folder to any static hosting:
+Build and deploy the `dist/` folder to any static hosting (with env vars configured in host settings):
 
 - **Vercel**: `npm i -g vercel && vercel`
 - **Netlify**: drag and drop `dist/` folder

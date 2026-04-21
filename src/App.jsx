@@ -1,5 +1,13 @@
 import { useState, useEffect, useCallback } from 'react'
-import { loadEvents, saveEvents, generateId } from './utils/storage.js'
+import {
+  loadEvents,
+  createEvent,
+  incrementEventByMatch,
+  resetEventCount,
+  deleteEvent,
+  generateId,
+  isSupabaseConfigured,
+} from './utils/storage.js'
 import Header from './components/Header.jsx'
 import EventList from './components/EventList.jsx'
 import CreateEvent from './components/CreateEvent.jsx'
@@ -13,22 +21,30 @@ export default function App() {
   const [events, setEvents] = useState([])
   const [selected, setSelected] = useState(null)
   const [toast, setToast] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setEvents(loadEvents())
-  }, [])
+    const init = async () => {
+      try {
+        const loaded = await loadEvents()
+        setEvents(loaded)
+      } catch (error) {
+        console.error('Failed to load events:', error)
+        showToast('Could not load events')
+      } finally {
+        setLoading(false)
+      }
+    }
 
-  const save = (updated) => {
-    setEvents(updated)
-    saveEvents(updated)
-  }
+    init()
+  }, [])
 
   const showToast = (msg) => {
     setToast(msg)
     setTimeout(() => setToast(null), 2200)
   }
 
-  const addEvent = (name, url) => {
+  const addEvent = async (name, url) => {
     const ev = {
       id: generateId(),
       name,
@@ -36,53 +52,62 @@ export default function App() {
       count: 0,
       createdAt: new Date().toISOString(),
     }
-    const updated = [ev, ...events]
-    save(updated)
-    setSelected(ev)
-    setView('detail')
-    showToast('Event created!')
+
+    try {
+      const saved = await createEvent(ev)
+      setEvents((prev) => [saved, ...prev.filter((item) => item.id !== saved.id)])
+      setSelected(saved)
+      setView('detail')
+      showToast('Event created!')
+    } catch (error) {
+      console.error('Failed to create event:', error)
+      showToast('Could not create event')
+    }
   }
 
   const increment = useCallback(
-    (value) => {
-      let found = null
-      const updated = events.map((e) => {
-        if (e.id === value || e.url === value) {
-          found = { ...e, count: e.count + 1 }
+    async (value) => {
+      try {
+        const found = await incrementEventByMatch(value)
+        if (found) {
+          setEvents((prev) => prev.map((item) => (item.id === found.id ? found : item)))
+          setSelected(found)
+          showToast(`+1 scan for "${found.name}" (${found.count})`)
           return found
         }
-        return e
-      })
-      if (found) {
-        save(updated)
-        setSelected(found)
-        showToast(`+1 scan for "${found.name}" (${found.count})`)
-        return found
+      } catch (error) {
+        console.error('Failed to increment event:', error)
+        showToast('Could not update counter')
       }
       return null
     },
-    [events]
+    []
   )
 
-  const deleteEvent = (id) => {
-    save(events.filter((e) => e.id !== id))
-    setView('list')
-    showToast('Event deleted')
+  const removeEvent = async (id) => {
+    try {
+      await deleteEvent(id)
+      setEvents((prev) => prev.filter((item) => item.id !== id))
+      setSelected(null)
+      setView('list')
+      showToast('Event deleted')
+    } catch (error) {
+      console.error('Failed to delete event:', error)
+      showToast('Could not delete event')
+    }
   }
 
-  const resetCount = (id) => {
-    let found = null
-    const updated = events.map((e) => {
-      if (e.id === id) {
-        found = { ...e, count: 0 }
-        return found
+  const resetCount = async (id) => {
+    try {
+      const found = await resetEventCount(id)
+      if (found) {
+        setEvents((prev) => prev.map((item) => (item.id === found.id ? found : item)))
+        setSelected(found)
+        showToast('Counter reset')
       }
-      return e
-    })
-    if (found) {
-      save(updated)
-      setSelected(found)
-      showToast('Counter reset')
+    } catch (error) {
+      console.error('Failed to reset counter:', error)
+      showToast('Could not reset counter')
     }
   }
 
@@ -97,7 +122,18 @@ export default function App() {
       />
 
       <main className="main">
-        {view === 'list' && (
+        {loading && (
+          <div className="empty-state" style={{ padding: '32px 20px' }}>
+            <p className="empty-title">Loading events...</p>
+            <p className="empty-text">
+              {isSupabaseConfigured()
+                ? 'Syncing with Supabase.'
+                : 'Using local storage. Add Supabase env vars to sync online.'}
+            </p>
+          </div>
+        )}
+
+        {!loading && view === 'list' && (
           <EventList
             events={events}
             onSelect={(e) => {
@@ -108,9 +144,9 @@ export default function App() {
           />
         )}
 
-        {view === 'create' && <CreateEvent onAdd={addEvent} />}
+        {!loading && view === 'create' && <CreateEvent onAdd={addEvent} />}
 
-        {view === 'scan' && (
+        {!loading && view === 'scan' && (
           <Scanner
             events={events}
             onMatch={increment}
@@ -118,11 +154,11 @@ export default function App() {
           />
         )}
 
-        {view === 'detail' && selected && (
+        {!loading && view === 'detail' && selected && (
           <EventDetail
             event={selected}
             onBack={() => setView('list')}
-            onDelete={deleteEvent}
+            onDelete={removeEvent}
             onReset={resetCount}
           />
         )}
