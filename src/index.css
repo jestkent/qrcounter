@@ -1,0 +1,65 @@
+:root {
+  --bg: #0e0e18;
+  --card: #16162a;
+  --card-hover: #1c1c38;
+  --border: #2a2a44;
+  --accent: #22d3a7;
+  --text-primary: #e8e8f0;
+  --text-secondary: #8888aa;
+  --danger: #f0425a;
+  --font: 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--font);
+  transition: opacity 0.2s;
+}
+
+button:hover {
+  opacity: 0.85;
+}
+
+input {
+  font-family: var(--font);
+}
+
+input::placeholder {
+  color: var(--text-secondary);
+}
+
+/* Toast animation */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* Pulse animation for scan frame */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

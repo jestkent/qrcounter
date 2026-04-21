@@ -1,0 +1,99 @@
+import { useEffect, useRef, useState } from 'react'
+import { Html5Qrcode } from 'html5-qrcode'
+import ManualEntry from './ManualEntry.jsx'
+
+export default function Scanner({ events, onMatch, onNoMatch }) {
+  const scannerRef = useRef(null)
+  const cooldownRef = useRef(false)
+  const [status, setStatus] = useState('starting')
+  const [lastResult, setLastResult] = useState(null)
+
+  useEffect(() => {
+    const scannerId = 'qr-reader'
+    let html5Qr = null
+
+    const startScanner = async () => {
+      try {
+        html5Qr = new Html5Qrcode(scannerId)
+        scannerRef.current = html5Qr
+
+        await html5Qr.start(
+          { facingMode: 'environment' },
+          {
+            fps: 10,
+            qrbox: { width: 220, height: 220 },
+            aspectRatio: 1.0,
+          },
+          (decodedText) => {
+            if (cooldownRef.current) return
+            cooldownRef.current = true
+            setLastResult(decodedText)
+
+            const found = onMatch(decodedText)
+            if (!found) onNoMatch()
+
+            setTimeout(() => {
+              cooldownRef.current = false
+            }, 2000)
+          },
+          () => {} // ignore errors during scanning
+        )
+
+        setStatus('scanning')
+      } catch (err) {
+        console.error('Scanner error:', err)
+        setStatus('error')
+      }
+    }
+
+    startScanner()
+
+    return () => {
+      if (html5Qr && html5Qr.isScanning) {
+        html5Qr.stop().catch(() => {})
+      }
+    }
+  }, []) // intentionally empty deps -- scanner starts once
+
+  return (
+    <div>
+      <h1 className="page-title">Scan QR</h1>
+      <p className="page-sub">Point camera at an event QR code</p>
+
+      <div
+        id="qr-reader"
+        style={{
+          width: '100%',
+          borderRadius: 16,
+          overflow: 'hidden',
+          marginBottom: 16,
+        }}
+      />
+
+      {status === 'starting' && (
+        <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: 14 }}>
+          Starting camera...
+        </p>
+      )}
+
+      {status === 'error' && (
+        <div className="empty-state" style={{ padding: '40px 20px' }}>
+          <div className="empty-icon">📷</div>
+          <p className="empty-title">Camera not available</p>
+          <p className="empty-text" style={{ lineHeight: 1.5 }}>
+            Allow camera access and reload, or use the manual counter below.
+          </p>
+        </div>
+      )}
+
+      {lastResult && (
+        <div className="scan-result">
+          <span className="scan-result-label">Last scanned: </span>
+          <span className="scan-result-value">{lastResult}</span>
+        </div>
+      )}
+
+      <ManualEntry events={events} onMatch={onMatch} />
+    </div>
+  )
+}
