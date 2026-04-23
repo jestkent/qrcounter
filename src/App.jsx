@@ -22,8 +22,33 @@ export default function App() {
   const [selected, setSelected] = useState(null)
   const [toast, setToast] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [isRedirecting, setIsRedirecting] = useState(
+    window.location.pathname === '/r'
+  )
 
   useEffect(() => {
+    if (window.location.pathname === '/r') {
+      const id = new URLSearchParams(window.location.search).get('id')
+      if (id) {
+        incrementEventByMatch(id)
+          .then((found) => {
+            if (found?.url) {
+              window.location.replace(found.url)
+            } else {
+              window.history.replaceState({}, '', '/')
+              setIsRedirecting(false)
+              setLoading(false)
+            }
+          })
+          .catch(() => {
+            window.history.replaceState({}, '', '/')
+            setIsRedirecting(false)
+            setLoading(false)
+          })
+        return
+      }
+    }
+
     const init = async () => {
       try {
         const loaded = await loadEvents()
@@ -109,6 +134,19 @@ export default function App() {
       console.error('Failed to reset counter:', error)
       showToast('Could not reset counter')
     }
+  }
+
+  if (isRedirecting) {
+    return (
+      <div className="app">
+        <main className="main">
+          <div className="empty-state" style={{ padding: '32px 20px' }}>
+            <p className="empty-title">Redirecting...</p>
+            <p className="empty-text">Taking you to the event page.</p>
+          </div>
+        </main>
+      </div>
+    )
   }
 
   return (

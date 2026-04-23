@@ -22,7 +22,14 @@ export default function Scanner({ events, onMatch, onNoMatch }) {
           cooldownRef.current = true
           setLastResult(decodedText)
 
-          const found = await onMatch(decodedText)
+          let matchValue = decodedText
+          try {
+            const parsed = new URL(decodedText)
+            const id = parsed.searchParams.get('id')
+            if (parsed.pathname === '/r' && id) matchValue = id
+          } catch {}
+
+          const found = await onMatch(matchValue)
           if (!found) onNoMatch()
 
           setTimeout(() => {
