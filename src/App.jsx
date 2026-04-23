@@ -91,13 +91,13 @@ export default function App() {
   }
 
   const increment = useCallback(
-    async (value) => {
+    async (value, mode = 'in') => {
       try {
-        const found = await incrementEventByMatch(value)
+        const found = await incrementEventByMatch(value, mode)
         if (found) {
           setEvents((prev) => prev.map((item) => (item.id === found.id ? found : item)))
           setSelected(found)
-          showToast(`+1 scan for "${found.name}" (${found.count})`)
+          showToast(`+1 ${mode === 'in' ? 'Check In' : 'Check Out'} for "${found.name}"`)
           return found
         }
       } catch (error) {

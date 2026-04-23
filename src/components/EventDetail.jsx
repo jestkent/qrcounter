@@ -46,6 +46,21 @@ export default function EventDetail({ event, onBack, onDelete, onReset }) {
         <div className="counter-label">Total Scans</div>
       </div>
 
+      <div className="inout-stats">
+        <div className="inout-box inout-in">
+          <div className="inout-number">{event.checkInCount ?? 0}</div>
+          <div className="inout-label">↓ Check In</div>
+        </div>
+        <div className="inout-box inout-present">
+          <div className="inout-number">{Math.max(0, (event.checkInCount ?? 0) - (event.checkOutCount ?? 0))}</div>
+          <div className="inout-label">Inside Now</div>
+        </div>
+        <div className="inout-box inout-out">
+          <div className="inout-number">{event.checkOutCount ?? 0}</div>
+          <div className="inout-label">↑ Check Out</div>
+        </div>
+      </div>
+
       <div className="detail-date">Created {formatDate(event.createdAt)}</div>
 
       <div className="detail-actions">
