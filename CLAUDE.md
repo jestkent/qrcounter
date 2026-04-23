@@ -42,23 +42,31 @@ Changed file:
 - `src/App.jsx`
 
 ### 3) Smart QR Redirect (/r route)
-- QR codes no longer encode the destination URL directly.
-- QR codes now encode `https://qrcountercbq.vercel.app/r?id=EVENT_ID`.
+- QR codes encode `https://qrcountercbq.vercel.app/r?id=EVENT_ID` (not the destination URL directly).
 - When a normal phone camera scans the QR:
-  - Browser opens `/r?id=EVENT_ID`
-  - App increments count (defaults to 'in' mode)
-  - Immediately redirects to `event.url` (the real destination)
+  - `/r?id=EVENT_ID` is intercepted by a **Vercel Edge Function** (`api/r.js`) before React loads
+  - Edge function increments the count in Supabase and returns an HTTP 302 redirect to `event.url`
+  - Total redirect time: ~200-300ms (vs ~2-3s when React handled it)
 - When the app's built-in scanner scans the same QR:
   - Extracts event ID from the redirect URL
   - Increments count with the current toggle mode (in/out)
   - Does NOT redirect — stays in app
-- `vercel.json` added to rewrite all routes to `index.html` for SPA support.
+- `vercel.json` routes `/r` → `/api/r` (edge function), then everything else → `index.html`.
+- React app still has a `/r` fallback handler in `App.jsx` for local dev (`npm run dev`).
 
 Changed files:
-- `src/App.jsx` (redirect handler on mount)
+- `api/r.js` (new — Vercel Edge Function, handles all production redirects)
+- `src/App.jsx` (fallback redirect handler for local dev only)
 - `src/components/EventDetail.jsx` (QR code uses redirect URL)
 - `src/components/Scanner.jsx` (extracts ID from redirect URL)
-- `vercel.json` (new file)
+- `vercel.json` (routes /r to edge function, catch-all to index.html)
+
+Edge Function details (`api/r.js`):
+- Runtime: `edge` (zero cold start, runs near the user geographically)
+- Tries `increment_scan` RPC first (atomic, single round trip)
+- Falls back to fetch + PATCH if RPC doesn't exist
+- On any error, redirects to app home rather than showing an error page
+- Uses `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` from `process.env`
 
 ### 4) Check In / Check Out Scanner Toggle
 - Scanner has a two-button toggle: `[ ↓ Check In ] [ ↑ Check Out ]`
@@ -194,3 +202,4 @@ App-side event shape:
 4. Add auth to scope events by user/team.
 5. Fix CSS `@import` order warning in stylesheet.
 6. Consider code splitting to reduce JS bundle size warning.
+7. The edge function (`api/r.js`) always defaults phone scans to 'in' mode — could accept a `mode` query param if bidirectional phone scanning is ever needed.
