@@ -65,8 +65,12 @@ Edge Function details (`api/r.js`):
 - Runtime: `edge` (zero cold start, runs near the user geographically)
 - Tries `increment_scan` RPC first (atomic, single round trip)
 - Falls back to fetch + PATCH if RPC doesn't exist
+- Returns a self-contained HTML loading page (NOT a bare 302 redirect) so the user sees a cute animation while the destination loads
+- Loading page features: animated running wildcat (SVG + CSS), paw prints, ✅ badge pop, "Scan counted!" message
+- `window.location.replace(destUrl)` fires immediately inside the HTML `<head>` — redirect starts as soon as the tiny page loads
 - On any error, redirects to app home rather than showing an error page
 - Uses `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` from `process.env`
+- The loading page is a pure HTML/CSS string — no external fonts, no JS frameworks, loads in milliseconds
 
 ### 4) Check In / Check Out Scanner Toggle
 - Scanner has a two-button toggle: `[ ↓ Check In ] [ ↑ Check Out ]`
