@@ -8,19 +8,30 @@ export default function Scanner({ events, onMatch, onNoMatch }) {
   const [status, setStatus] = useState('starting')
   const [lastResult, setLastResult] = useState(null)
   const [mode, setMode] = useState('in')
-  const [flash, setFlash] = useState(null) // 'success' | 'fail' | null
+  const [flash, setFlash] = useState(null)
+  const [vibrateOn, setVibrateOn] = useState(() => localStorage.getItem('vibrate') !== 'off')
   const modeRef = useRef('in')
+  const vibrateRef = useRef(vibrateOn)
+
+  useEffect(() => {
+    vibrateRef.current = vibrateOn
+    localStorage.setItem('vibrate', vibrateOn ? 'on' : 'off')
+  }, [vibrateOn])
 
   useEffect(() => {
     modeRef.current = mode
   }, [mode])
 
-  const triggerFeedback = (success) => {
-    setFlash(success ? 'success' : 'fail')
+  const triggerFeedback = useRef(null)
+  triggerFeedback.current = (found, mode) => {
+    const color = found ? (mode === 'in' ? 'success' : 'fail') : 'fail'
+    setFlash(color)
     setTimeout(() => setFlash(null), 600)
-    if (navigator.vibrate) {
-      navigator.vibrate(success ? 100 : [100, 60, 100])
-    }
+    try {
+      if (vibrateRef.current && 'vibrate' in navigator) {
+        navigator.vibrate(found ? 100 : [100, 60, 100])
+      }
+    } catch {}
   }
 
   useEffect(() => {
@@ -45,12 +56,8 @@ export default function Scanner({ events, onMatch, onNoMatch }) {
           } catch {}
 
           const found = await onMatch(matchValue, modeRef.current)
-          if (found) {
-            triggerFeedback(true)
-          } else {
-            triggerFeedback(false)
-            onNoMatch()
-          }
+          triggerFeedback.current(found, modeRef.current)
+          if (!found) onNoMatch()
 
           setTimeout(() => {
             cooldownRef.current = false
@@ -151,6 +158,18 @@ export default function Scanner({ events, onMatch, onNoMatch }) {
           <span className="scan-result-value">{lastResult}</span>
         </div>
       )}
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '12px 0' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 14, color: 'var(--text-secondary)' }}>
+          <input
+            type="checkbox"
+            checked={vibrateOn}
+            onChange={(e) => setVibrateOn(e.target.checked)}
+            style={{ width: 16, height: 16, cursor: 'pointer' }}
+          />
+          Vibration (disable to save battery)
+        </label>
+      </div>
 
       <ManualEntry events={events} onMatch={(val) => onMatch(val, mode)} />
     </div>
