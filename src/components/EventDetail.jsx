@@ -5,9 +5,11 @@ import { formatDate } from '../utils/storage.js'
 export default function EventDetail({ event, onBack, onDelete, onReset }) {
   const canvasRef = useRef(null)
 
+  const redirectUrl = `${window.location.origin}/r?id=${event.id}`
+
   useEffect(() => {
     if (canvasRef.current) {
-      QRCode.toCanvas(canvasRef.current, event.url, {
+      QRCode.toCanvas(canvasRef.current, redirectUrl, {
         width: 250,
         margin: 2,
         color: {
@@ -44,6 +46,21 @@ export default function EventDetail({ event, onBack, onDelete, onReset }) {
         <div className="counter-label">Total Scans</div>
       </div>
 
+      <div className="inout-stats">
+        <div className="inout-box inout-in">
+          <div className="inout-number">{event.checkInCount ?? 0}</div>
+          <div className="inout-label">↓ Check In</div>
+        </div>
+        <div className="inout-box inout-present">
+          <div className="inout-number">{Math.max(0, (event.checkInCount ?? 0) - (event.checkOutCount ?? 0))}</div>
+          <div className="inout-label">Inside Now</div>
+        </div>
+        <div className="inout-box inout-out">
+          <div className="inout-number">{event.checkOutCount ?? 0}</div>
+          <div className="inout-label">↑ Check Out</div>
+        </div>
+      </div>
+
       <div className="detail-date">Created {formatDate(event.createdAt)}</div>
 
       <div className="detail-actions">
@@ -64,9 +81,9 @@ export default function EventDetail({ event, onBack, onDelete, onReset }) {
       </div>
 
       <p className="detail-hint">
-        Scan this QR with the app's scanner to count.
+        Any camera scan → opens event page &amp; counts.
         <br />
-        Any other scanner will open the URL directly.
+        App scanner → counts only.
       </p>
     </div>
   )

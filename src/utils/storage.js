@@ -29,6 +29,8 @@ function normalizeRow(row) {
     name: row.name,
     url: row.url,
     count: row.scan_count ?? 0,
+    checkInCount: row.check_in_count ?? 0,
+    checkOutCount: row.check_out_count ?? 0,
     createdAt: row.created_at,
   }
 }
@@ -42,7 +44,7 @@ export async function loadEvents() {
 
   const { data, error } = await supabase
     .from('events')
-    .select('id, name, url, scan_count, created_at')
+    .select('*')
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -72,7 +74,7 @@ export async function createEvent(event) {
       scan_count: event.count,
       created_at: event.createdAt,
     })
-    .select('id, name, url, scan_count, created_at')
+    .select('*')
     .single()
 
   if (error) throw error
@@ -83,13 +85,18 @@ export async function createEvent(event) {
   return saved
 }
 
-export async function incrementEventByMatch(value) {
+export async function incrementEventByMatch(value, mode = 'in') {
   if (!supabase) {
     const current = loadLocalEvents()
     let found = null
     const updated = current.map((item) => {
       if (item.id === value || item.url === value) {
-        found = { ...item, count: item.count + 1 }
+        found = {
+          ...item,
+          count: item.count + 1,
+          checkInCount: mode === 'in' ? (item.checkInCount ?? 0) + 1 : (item.checkInCount ?? 0),
+          checkOutCount: mode === 'out' ? (item.checkOutCount ?? 0) + 1 : (item.checkOutCount ?? 0),
+        }
         return found
       }
       return item
@@ -98,32 +105,52 @@ export async function incrementEventByMatch(value) {
     return found
   }
 
-  let query = supabase.from('events').select('id, name, url, scan_count, created_at').eq('id', value).limit(1)
-  let { data, error } = await query
+  let { data, error } = await supabase
+    .from('events')
+    .select('*')
+    .eq('id', value)
+    .limit(1)
 
   if (error) throw error
 
   if (!data || data.length === 0) {
-    query = supabase.from('events').select('id, name, url, scan_count, created_at').eq('url', value).limit(1)
-    const secondResult = await query
-    data = secondResult.data
-    error = secondResult.error
-    if (error) throw error
+    const second = await supabase
+      .from('events')
+      .select('*')
+      .eq('url', value)
+      .limit(1)
+    data = second.data
+    if (second.error) throw second.error
   }
 
   if (!data || data.length === 0) return null
 
   const row = data[0]
-  const nextCount = (row.scan_count ?? 0) + 1
 
-  const { data: updatedRow, error: updateError } = await supabase
-    .from('events')
-    .update({ scan_count: nextCount })
-    .eq('id', row.id)
-    .select('id, name, url, scan_count, created_at')
-    .single()
+  // Try atomic RPC first (race-condition safe for simultaneous scans)
+  const { data: rpcData, error: rpcError } = await supabase
+    .rpc('increment_scan', { event_id: row.id, scan_mode: mode })
 
-  if (updateError) throw updateError
+  let updatedRow
+  if (!rpcError && rpcData?.[0]) {
+    updatedRow = rpcData[0]
+  } else {
+    // Fallback: direct update (run the SQL function in Supabase to enable atomic mode)
+    const hasInOut = row.check_in_count !== undefined
+    const updateData = { scan_count: (row.scan_count ?? 0) + 1 }
+    if (hasInOut) {
+      updateData.check_in_count = (row.check_in_count ?? 0) + (mode === 'in' ? 1 : 0)
+      updateData.check_out_count = (row.check_out_count ?? 0) + (mode === 'out' ? 1 : 0)
+    }
+    const { data: fallbackRow, error: updateError } = await supabase
+      .from('events')
+      .update(updateData)
+      .eq('id', row.id)
+      .select('*')
+      .single()
+    if (updateError) throw updateError
+    updatedRow = fallbackRow
+  }
 
   const updated = normalizeRow(updatedRow)
   const current = loadLocalEvents().map((item) => (item.id === updated.id ? updated : item))
@@ -137,7 +164,7 @@ export async function resetEventCount(id) {
     let found = null
     const updated = current.map((item) => {
       if (item.id === id) {
-        found = { ...item, count: 0 }
+        found = { ...item, count: 0, checkInCount: 0, checkOutCount: 0 }
         return found
       }
       return item
@@ -146,11 +173,20 @@ export async function resetEventCount(id) {
     return found
   }
 
+  const { data: existing } = await supabase.from('events').select('*').eq('id', id).single()
+  const hasInOut = existing && existing.check_in_count !== undefined
+
+  const updateData = { scan_count: 0 }
+  if (hasInOut) {
+    updateData.check_in_count = 0
+    updateData.check_out_count = 0
+  }
+
   const { data, error } = await supabase
     .from('events')
-    .update({ scan_count: 0 })
+    .update(updateData)
     .eq('id', id)
-    .select('id, name, url, scan_count, created_at')
+    .select('*')
     .single()
 
   if (error) throw error

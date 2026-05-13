@@ -7,6 +7,32 @@ export default function Scanner({ events, onMatch, onNoMatch }) {
   const cooldownRef = useRef(false)
   const [status, setStatus] = useState('starting')
   const [lastResult, setLastResult] = useState(null)
+  const [mode, setMode] = useState('in')
+  const [flash, setFlash] = useState(null)
+  const [vibrateOn, setVibrateOn] = useState(() => localStorage.getItem('vibrate') !== 'off')
+  const modeRef = useRef('in')
+  const vibrateRef = useRef(vibrateOn)
+
+  useEffect(() => {
+    vibrateRef.current = vibrateOn
+    localStorage.setItem('vibrate', vibrateOn ? 'on' : 'off')
+  }, [vibrateOn])
+
+  useEffect(() => {
+    modeRef.current = mode
+  }, [mode])
+
+  const triggerFeedback = useRef(null)
+  triggerFeedback.current = (found, mode) => {
+    const color = found ? (mode === 'in' ? 'success' : 'fail') : 'fail'
+    setFlash(color)
+    setTimeout(() => setFlash(null), 600)
+    try {
+      if (vibrateRef.current && 'vibrate' in navigator) {
+        navigator.vibrate(found ? 100 : [100, 60, 100])
+      }
+    } catch {}
+  }
 
   useEffect(() => {
     const scannerId = 'qr-reader'
@@ -22,7 +48,15 @@ export default function Scanner({ events, onMatch, onNoMatch }) {
           cooldownRef.current = true
           setLastResult(decodedText)
 
-          const found = await onMatch(decodedText)
+          let matchValue = decodedText
+          try {
+            const parsed = new URL(decodedText)
+            const id = parsed.searchParams.get('id')
+            if (parsed.pathname === '/r' && id) matchValue = id
+          } catch {}
+
+          const found = await onMatch(matchValue, modeRef.current)
+          triggerFeedback.current(found, modeRef.current)
           if (!found) onNoMatch()
 
           setTimeout(() => {
@@ -40,7 +74,7 @@ export default function Scanner({ events, onMatch, onNoMatch }) {
           (decodedText) => {
             void handleDecoded(decodedText)
           },
-          () => {} // ignore errors during scanning
+          () => {}
         )
 
         setStatus('scanning')
@@ -57,12 +91,40 @@ export default function Scanner({ events, onMatch, onNoMatch }) {
         html5Qr.stop().catch(() => {})
       }
     }
-  }, []) // intentionally empty deps -- scanner starts once
+  }, [])
 
   return (
     <div>
+      {flash && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: flash === 'success' ? 'rgba(34,197,94,0.35)' : 'rgba(239,68,68,0.35)',
+            pointerEvents: 'none',
+            zIndex: 999,
+            transition: 'opacity 0.3s',
+          }}
+        />
+      )}
+
       <h1 className="page-title">Scan QR</h1>
       <p className="page-sub">Point camera at an event QR code</p>
+
+      <div className="scan-toggle">
+        <button
+          className={`toggle-btn ${mode === 'in' ? 'toggle-in active' : 'toggle-in'}`}
+          onClick={() => setMode('in')}
+        >
+          ↓ Check In
+        </button>
+        <button
+          className={`toggle-btn ${mode === 'out' ? 'toggle-out active' : 'toggle-out'}`}
+          onClick={() => setMode('out')}
+        >
+          ↑ Check Out
+        </button>
+      </div>
 
       <div
         id="qr-reader"
@@ -97,7 +159,19 @@ export default function Scanner({ events, onMatch, onNoMatch }) {
         </div>
       )}
 
-      <ManualEntry events={events} onMatch={onMatch} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '12px 0' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 14, color: 'var(--text-secondary)' }}>
+          <input
+            type="checkbox"
+            checked={vibrateOn}
+            onChange={(e) => setVibrateOn(e.target.checked)}
+            style={{ width: 16, height: 16, cursor: 'pointer' }}
+          />
+          Vibration (disable to save battery)
+        </label>
+      </div>
+
+      <ManualEntry events={events} onMatch={(val) => onMatch(val, mode)} />
     </div>
   )
 }

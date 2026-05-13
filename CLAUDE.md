@@ -2,8 +2,9 @@
 
 ## Project Snapshot
 - App: QR Counter (React + Vite)
-- Goal completed: connect persistence to Supabase while keeping local fallback
-- Current local run URL (last verified): http://localhost:5174/
+- Live URL: https://qrcountercbq.vercel.app
+- Deployed via: Vercel CLI (`npx vercel --prod`) — NOT connected to GitHub auto-deploy
+- Local dev URL: http://localhost:5174/
 
 ## What Was Implemented
 
@@ -11,6 +12,9 @@
 - Added `@supabase/supabase-js` dependency.
 - Reworked storage layer to support async Supabase CRUD.
 - Kept localStorage as automatic fallback when env vars are missing or Supabase fails.
+- All queries use `select('*')` so the app works even if optional columns don't exist yet.
+- Inserts never explicitly set `check_in_count`/`check_out_count` — relies on DB defaults.
+- Updates for in/out counts are conditional: only applied if those columns exist in the fetched row.
 
 Changed file:
 - `src/utils/storage.js`
@@ -23,8 +27,8 @@ Key behavior in storage layer:
 - Exposes async functions used by the app:
   - `loadEvents()`
   - `createEvent(event)`
-  - `incrementEventByMatch(value)`
-  - `resetEventCount(id)`
+  - `incrementEventByMatch(value, mode = 'in')` — mode is 'in' or 'out'
+  - `resetEventCount(id)` — resets scan_count, check_in_count, check_out_count to 0
   - `deleteEvent(id)`
 - Maintains local cache via localStorage for resilience.
 
@@ -32,86 +36,177 @@ Key behavior in storage layer:
 - Replaced sync local save flow with async storage calls.
 - Added loading state during initial data fetch.
 - Added error handling + toast feedback around create/increment/reset/delete.
+- Toast message shows "Check In" or "Check Out" label based on scan mode.
 
 Changed file:
 - `src/App.jsx`
 
-### 3) Scanner Callback Updated for Async Match
-- Scanner now awaits async match/increment handler before showing no-match behavior.
+### 3) Smart QR Redirect (/r route)
+- QR codes encode `https://qrcountercbq.vercel.app/r?id=EVENT_ID` (not the destination URL directly).
+- When a normal phone camera scans the QR:
+  - `/r?id=EVENT_ID` is intercepted by a **Vercel Edge Function** (`api/r.js`) before React loads
+  - Edge function increments the count in Supabase and returns an HTTP 302 redirect to `event.url`
+  - Total redirect time: ~200-300ms (vs ~2-3s when React handled it)
+- When the app's built-in scanner scans the same QR:
+  - Extracts event ID from the redirect URL
+  - Increments count with the current toggle mode (in/out)
+  - Does NOT redirect — stays in app
+- `vercel.json` routes `/r` → `/api/r` (edge function), then everything else → `index.html`.
+- React app still has a `/r` fallback handler in `App.jsx` for local dev (`npm run dev`).
+
+Changed files:
+- `api/r.js` (new — Vercel Edge Function, handles all production redirects)
+- `src/App.jsx` (fallback redirect handler for local dev only)
+- `src/components/EventDetail.jsx` (QR code uses redirect URL)
+- `src/components/Scanner.jsx` (extracts ID from redirect URL)
+- `vercel.json` (routes /r to edge function, catch-all to index.html)
+
+Edge Function details (`api/r.js`):
+- Runtime: `edge` (zero cold start, runs near the user geographically)
+- Tries `increment_scan` RPC first (atomic, single round trip)
+- Falls back to fetch + PATCH if RPC doesn't exist
+- Returns a self-contained HTML loading page (NOT a bare 302 redirect) so the user sees a cute animation while the destination loads
+- Loading page features: animated running wildcat (SVG + CSS), paw prints, ✅ badge pop, "Scan counted!" message
+- `window.location.replace(destUrl)` fires immediately inside the HTML `<head>` — redirect starts as soon as the tiny page loads
+- On any error, redirects to app home rather than showing an error page
+- Uses `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` from `process.env`
+- The loading page is a pure HTML/CSS string — no external fonts, no JS frameworks, loads in milliseconds
+
+### 4) Check In / Check Out Scanner Toggle
+- Scanner has a two-button toggle: `[ ↓ Check In ] [ ↑ Check Out ]`
+- Mode persists while scanner is open (flip once, scan many).
+- Scans are recorded as check-in or check-out in Supabase.
+- Mode is tracked via `modeRef` (not state) so the scanner's `useEffect` closure always reads the latest value without needing to restart the camera.
 
 Changed file:
 - `src/components/Scanner.jsx`
 
-### 4) Environment + Security Hygiene
-- Created local env template for Supabase keys.
-- Added `.env` to git ignore so keys are not committed.
-- Created real local `.env` in workspace with provided project values.
-
-Changed files:
-- `.env.example`
-- `.gitignore`
-- `.env` (local only, should remain uncommitted)
-
-### 5) Documentation
-- README updated with Supabase setup instructions.
-- Added SQL block for `events` table and RLS policies.
+### 5) Scan Feedback (Vibration + Flash)
+- Check In success → green screen flash + short vibration (100ms).
+- Check Out success → red screen flash + short vibration (100ms).
+- No match → red screen flash + double vibration ([100, 60, 100]ms).
+- Vibration uses `navigator.vibrate` — works on Android, not supported on iOS.
+- `triggerFeedback` is stored as a `useRef` (not a plain function) so the scanner's closed-over `useEffect` always calls the latest version — fixes stale closure bug that prevented vibration from firing.
 
 Changed file:
-- `README.md`
+- `src/components/Scanner.jsx`
 
-## Supabase Details Already Wired
+### 6) Vibration Toggle
+- Checkbox below the scanner: "Vibration (disable to save battery)"
+- Enabled by default.
+- Preference saved to `localStorage` key `vibrate` ('on'/'off') — persists across sessions.
+- Read via `vibrateRef` inside the feedback function so it's always current without restarting the scanner.
+
+Changed file:
+- `src/components/Scanner.jsx`
+
+### 7) In/Out Stats on Event Detail
+- Event detail page shows three stat boxes:
+  - **Check In** (green) — total check-ins
+  - **Inside Now** (accent) — check-ins minus check-outs
+  - **Check Out** (red) — total check-outs
+- Total Scans counter still shown above.
+- Stats show 0 gracefully if `check_in_count`/`check_out_count` columns don't exist yet.
+
+Changed file:
+- `src/components/EventDetail.jsx`
+
+### 8) Atomic Increment (Race-Condition Safe)
+- `incrementEventByMatch` now tries a Supabase RPC call (`increment_scan`) first.
+- RPC does the `scan_count + 1` increment atomically in the database — safe for simultaneous scans from multiple devices.
+- Falls back to the old read-then-write method if the RPC function doesn't exist yet.
+- This means two people scanning at the exact same moment will both be counted correctly.
+
+Changed file:
+- `src/utils/storage.js`
+
+### 9) Environment + Security Hygiene
+- `.env` is gitignored and never committed.
+- `.env.example` is the template.
+- Vercel has env vars set via dashboard (Production + Preview).
+
+## Supabase Details
 - Project ID: `ssovivfxmffdoxjfmvcq`
-- URL in env: `https://ssovivfxmffdoxjfmvcq.supabase.co`
-- Anon key is set in local `.env`.
+- URL: `https://ssovivfxmffdoxjfmvcq.supabase.co`
+- Anon key is set in local `.env` and in Vercel environment variables.
 
-## Important Operational Note
-- Code is ready for Supabase, but database table/policies must exist in Supabase project.
-- SQL to run is documented in `README.md` under "Supabase Setup".
-- Until SQL is applied successfully, app behavior may fall back to localStorage.
+## Pending SQL (run in Supabase SQL Editor)
 
-## Validation Performed
-- `npm install` completed.
-- `npm run build` completed successfully after integration.
-- Dev server starts successfully.
-- Known non-blocking warnings:
-  - CSS `@import` order warning
-  - bundle size warning (>500 kB chunk)
+### Step 1 — Add in/out columns (required for Check In/Out tracking):
+```sql
+alter table public.events add column if not exists check_in_count integer not null default 0;
+alter table public.events add column if not exists check_out_count integer not null default 0;
+```
+
+### Step 2 — Create atomic increment function (required for concurrent-safe counting):
+```sql
+create or replace function increment_scan(event_id text, scan_mode text)
+returns setof events language plpgsql as $$
+begin
+  update events set
+    scan_count = scan_count + 1,
+    check_in_count = case when scan_mode = 'in' then check_in_count + 1 else check_in_count end,
+    check_out_count = case when scan_mode = 'out' then check_out_count + 1 else check_out_count end
+  where id = event_id;
+  return query select * from events where id = event_id;
+end;
+$$;
+```
+
+> The app works without both SQL steps but with degraded functionality:
+> - Without Step 1: in/out stats always show 0.
+> - Without Step 2: simultaneous scans from multiple devices may lose counts.
 
 ## Current Data Model
 Table: `public.events`
 - `id` text primary key
 - `name` text not null
-- `url` text not null
-- `scan_count` integer not null default 0
+- `url` text not null — the destination URL (where phone scans redirect to)
+- `scan_count` integer not null default 0 — total scans
+- `check_in_count` integer not null default 0 — added via Step 1 SQL above
+- `check_out_count` integer not null default 0 — added via Step 1 SQL above
 - `created_at` timestamptz not null default now()
 
 App-side event shape:
 - `id`
 - `name`
 - `url`
-- `count`
-- `createdAt`
+- `count` (← scan_count)
+- `checkInCount` (← check_in_count, defaults to 0 if column missing)
+- `checkOutCount` (← check_out_count, defaults to 0 if column missing)
+- `createdAt` (← created_at)
 
-Mapping:
-- `scan_count` <-> `count`
-- `created_at` <-> `createdAt`
+## Deployment
+- Platform: Vercel (project: `qrcountercbq`)
+- Deploy command: `npx vercel --prod`
+- Vercel is NOT auto-connected to GitHub — must deploy manually via CLI
+- Two GitHub repos exist: `qrcounter` (public, has the code) and `qrcountercbq` (private, Vercel was originally pointed here — ignore it)
+- Vercel env vars (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) are set in the Vercel dashboard for Production + Preview.
 
-## Next Likely Edits (for future AI)
-1. Tighten RLS policies (current policies are broad for quick setup).
-2. Add auth (optional) and scope events by user/team.
-3. Add migration from existing localStorage-only datasets into Supabase.
-4. Address CSS import-order warning in stylesheet.
-5. Consider code splitting/manual chunks to reduce JS bundle warning.
+## Known Non-Blocking Warnings
+- CSS `@import` order warning in stylesheet
+- Bundle size warning (>500 kB chunk)
 
 ## Safe Commands
 - Install deps: `npm install`
 - Run dev: `npm run dev`
 - Build: `npm run build`
+- Deploy: `npx vercel --prod`
 
 ## Guardrails
 - Do not commit `.env`.
 - Keep `.env.example` as template only.
-- If Supabase env vars are absent, app should continue working via local fallback.
+- If Supabase env vars are absent, app continues working via localStorage fallback.
+- Never use explicit column names in select queries — always use `select('*')` to stay resilient to missing optional columns.
+
+## Next Likely Edits (for future AI)
+1. Run the two pending SQL steps in Supabase (in/out columns + atomic increment function).
+2. Connect Vercel to the correct GitHub repo (`qrcounter`) for auto-deploy on push.
+3. Tighten RLS policies (current policies allow full anon access).
+4. Add auth to scope events by user/team.
+5. Fix CSS `@import` order warning in stylesheet.
+6. Consider code splitting to reduce JS bundle size warning.
+7. The edge function (`api/r.js`) always defaults phone scans to 'in' mode — could accept a `mode` query param if bidirectional phone scanning is ever needed.
 
 ## graphify
 
