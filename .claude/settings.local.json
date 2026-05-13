@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p \"D:\\\\Desktop\\\\qrcounter\\\\graphify-out\")"
+    ],
+    "additionalDirectories": [
+      "D:\\Desktop\\qrcounter\\graphify-out"
+    ]
+  }
+}

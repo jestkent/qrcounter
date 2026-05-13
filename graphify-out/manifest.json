@@ -1,0 +1,62 @@
+{
+  "D:\\Desktop\\qrcounter\\vite.config.js": {
+    "mtime": 1776746708.8042176,
+    "hash": "3f740ce8db765a7b8f4d1ccc91666b30"
+  },
+  "D:\\Desktop\\qrcounter\\src\\App.jsx": {
+    "mtime": 1776749194.3985827,
+    "hash": "58ea2e39bd81fc9c3929fb669a23fe90"
+  },
+  "D:\\Desktop\\qrcounter\\src\\main.jsx": {
+    "mtime": 1776746708.851904,
+    "hash": "cfae6f5da53e35fef39001233c0b5c38"
+  },
+  "D:\\Desktop\\qrcounter\\src\\components\\CreateEvent.jsx": {
+    "mtime": 1776746708.8914196,
+    "hash": "b0b82b4a5385735313f158c47f0166b6"
+  },
+  "D:\\Desktop\\qrcounter\\src\\components\\EventDetail.jsx": {
+    "mtime": 1776746708.929556,
+    "hash": "553d4d4ff5fbddad4034e22e2c1e9afb"
+  },
+  "D:\\Desktop\\qrcounter\\src\\components\\EventList.jsx": {
+    "mtime": 1776746708.923419,
+    "hash": "e9660bb025f3fe4d6ea3833565ed825b"
+  },
+  "D:\\Desktop\\qrcounter\\src\\components\\Header.jsx": {
+    "mtime": 1776746708.8995812,
+    "hash": "bfc43d5b6da750204080df3d2ce5f494"
+  },
+  "D:\\Desktop\\qrcounter\\src\\components\\ManualEntry.jsx": {
+    "mtime": 1776746708.9091527,
+    "hash": "dc48bc200a7d37cb1b0405b7633bde68"
+  },
+  "D:\\Desktop\\qrcounter\\src\\components\\Scanner.jsx": {
+    "mtime": 1776749214.4844322,
+    "hash": "9c60a9dd7e45f2a47358eb9f9f975cd8"
+  },
+  "D:\\Desktop\\qrcounter\\src\\components\\Toast.jsx": {
+    "mtime": 1776746708.917815,
+    "hash": "f8d211798d637f873b0d82afbde14c6d"
+  },
+  "D:\\Desktop\\qrcounter\\src\\utils\\storage.js": {
+    "mtime": 1776749194.4063199,
+    "hash": "a926ef0815a964d5e3c1e2a5efb7e9ba"
+  },
+  "D:\\Desktop\\qrcounter\\CLAUDE.md": {
+    "mtime": 1776755938.8936703,
+    "hash": "983a1b5f983f19caa15af7476ff2bccf"
+  },
+  "D:\\Desktop\\qrcounter\\index.html": {
+    "mtime": 1776746708.8036602,
+    "hash": "1a36455a2d4e47d496afbbe2485fcc78"
+  },
+  "D:\\Desktop\\qrcounter\\README.md": {
+    "mtime": 1776749281.5352523,
+    "hash": "2e0b2a756f5e61efb74405425b9ea331"
+  },
+  "D:\\Desktop\\qrcounter\\public\\favicon.svg": {
+    "mtime": 1776746708.841177,
+    "hash": "00441480378bcf37ff6b2fb883865d5a"
+  }
+}

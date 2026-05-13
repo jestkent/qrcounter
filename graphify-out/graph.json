@@ -1,0 +1,1664 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "storage_crud_pattern",
+        "label": "Supabase CRUD with localStorage Cache Pattern",
+        "nodes": [
+          "storage_loadevents",
+          "storage_createevent",
+          "storage_incrementeventbymatch",
+          "storage_reseteventcount",
+          "storage_deleteevent"
+        ],
+        "relation": "implement",
+        "confidence": "EXTRACTED",
+        "confidence_score": 0.95,
+        "source_file": "src/utils/storage.js"
+      },
+      {
+        "id": "app_event_lifecycle",
+        "label": "App Event Lifecycle (create, scan, display, delete)",
+        "nodes": [
+          "app_app",
+          "storage_storage",
+          "scanner_scanner"
+        ],
+        "relation": "participate_in",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "src/App.jsx"
+      },
+      {
+        "id": "local_cache_sync",
+        "label": "Local Cache Sync (load, normalize, save)",
+        "nodes": [
+          "storage_normalizerow",
+          "storage_loadlocalevents",
+          "storage_savelocalevents"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 0.95,
+        "source_file": "src/utils/storage.js"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "label": "vite.config.js",
+      "file_type": "code",
+      "source_file": "vite.config.js",
+      "source_location": "L1",
+      "id": "vite_config_js",
+      "community": 10,
+      "norm_label": "vite.config.js"
+    },
+    {
+      "label": "App.jsx",
+      "file_type": "code",
+      "source_file": "src\\App.jsx",
+      "source_location": "L1",
+      "id": "src_app_jsx",
+      "community": 0,
+      "norm_label": "app.jsx"
+    },
+    {
+      "label": "App()",
+      "file_type": "code",
+      "source_file": "src\\App.jsx",
+      "source_location": "L19",
+      "id": "src_app_app",
+      "community": 0,
+      "norm_label": "app()"
+    },
+    {
+      "label": "main.jsx",
+      "file_type": "code",
+      "source_file": "src\\main.jsx",
+      "source_location": "L1",
+      "id": "src_main_jsx",
+      "community": 11,
+      "norm_label": "main.jsx"
+    },
+    {
+      "label": "CreateEvent.jsx",
+      "file_type": "code",
+      "source_file": "src\\components\\CreateEvent.jsx",
+      "source_location": "L1",
+      "id": "src_components_createevent_jsx",
+      "community": 5,
+      "norm_label": "createevent.jsx"
+    },
+    {
+      "label": "CreateEvent()",
+      "file_type": "code",
+      "source_file": "src\\components\\CreateEvent.jsx",
+      "source_location": "L3",
+      "id": "components_createevent_createevent",
+      "community": 5,
+      "norm_label": "createevent()"
+    },
+    {
+      "label": "EventDetail.jsx",
+      "file_type": "code",
+      "source_file": "src\\components\\EventDetail.jsx",
+      "source_location": "L1",
+      "id": "src_components_eventdetail_jsx",
+      "community": 4,
+      "norm_label": "eventdetail.jsx"
+    },
+    {
+      "label": "EventDetail()",
+      "file_type": "code",
+      "source_file": "src\\components\\EventDetail.jsx",
+      "source_location": "L5",
+      "id": "components_eventdetail_eventdetail",
+      "community": 4,
+      "norm_label": "eventdetail()"
+    },
+    {
+      "label": "EventList.jsx",
+      "file_type": "code",
+      "source_file": "src\\components\\EventList.jsx",
+      "source_location": "L1",
+      "id": "src_components_eventlist_jsx",
+      "community": 4,
+      "norm_label": "eventlist.jsx"
+    },
+    {
+      "label": "EventList()",
+      "file_type": "code",
+      "source_file": "src\\components\\EventList.jsx",
+      "source_location": "L3",
+      "id": "components_eventlist_eventlist",
+      "community": 4,
+      "norm_label": "eventlist()"
+    },
+    {
+      "label": "Header.jsx",
+      "file_type": "code",
+      "source_file": "src\\components\\Header.jsx",
+      "source_location": "L1",
+      "id": "src_components_header_jsx",
+      "community": 6,
+      "norm_label": "header.jsx"
+    },
+    {
+      "label": "Header()",
+      "file_type": "code",
+      "source_file": "src\\components\\Header.jsx",
+      "source_location": "L1",
+      "id": "components_header_header",
+      "community": 6,
+      "norm_label": "header()"
+    },
+    {
+      "label": "ManualEntry.jsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ManualEntry.jsx",
+      "source_location": "L1",
+      "id": "src_components_manualentry_jsx",
+      "community": 7,
+      "norm_label": "manualentry.jsx"
+    },
+    {
+      "label": "ManualEntry()",
+      "file_type": "code",
+      "source_file": "src\\components\\ManualEntry.jsx",
+      "source_location": "L3",
+      "id": "components_manualentry_manualentry",
+      "community": 7,
+      "norm_label": "manualentry()"
+    },
+    {
+      "label": "Scanner.jsx",
+      "file_type": "code",
+      "source_file": "src\\components\\Scanner.jsx",
+      "source_location": "L1",
+      "id": "src_components_scanner_jsx",
+      "community": 8,
+      "norm_label": "scanner.jsx"
+    },
+    {
+      "label": "Scanner()",
+      "file_type": "code",
+      "source_file": "src\\components\\Scanner.jsx",
+      "source_location": "L5",
+      "id": "components_scanner_scanner",
+      "community": 8,
+      "norm_label": "scanner()"
+    },
+    {
+      "label": "Toast.jsx",
+      "file_type": "code",
+      "source_file": "src\\components\\Toast.jsx",
+      "source_location": "L1",
+      "id": "src_components_toast_jsx",
+      "community": 9,
+      "norm_label": "toast.jsx"
+    },
+    {
+      "label": "Toast()",
+      "file_type": "code",
+      "source_file": "src\\components\\Toast.jsx",
+      "source_location": "L1",
+      "id": "components_toast_toast",
+      "community": 9,
+      "norm_label": "toast()"
+    },
+    {
+      "label": "storage.js",
+      "file_type": "code",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L1",
+      "id": "src_utils_storage_js",
+      "community": 0,
+      "norm_label": "storage.js"
+    },
+    {
+      "label": "loadLocalEvents()",
+      "file_type": "code",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L9",
+      "id": "utils_storage_loadlocalevents",
+      "community": 0,
+      "norm_label": "loadlocalevents()"
+    },
+    {
+      "label": "saveLocalEvents()",
+      "file_type": "code",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L18",
+      "id": "utils_storage_savelocalevents",
+      "community": 0,
+      "norm_label": "savelocalevents()"
+    },
+    {
+      "label": "normalizeRow()",
+      "file_type": "code",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L26",
+      "id": "utils_storage_normalizerow",
+      "community": 0,
+      "norm_label": "normalizerow()"
+    },
+    {
+      "label": "isSupabaseConfigured()",
+      "file_type": "code",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L36",
+      "id": "utils_storage_issupabaseconfigured",
+      "community": 0,
+      "norm_label": "issupabaseconfigured()"
+    },
+    {
+      "label": "loadEvents()",
+      "file_type": "code",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L40",
+      "id": "utils_storage_loadevents",
+      "community": 0,
+      "norm_label": "loadevents()"
+    },
+    {
+      "label": "createEvent()",
+      "file_type": "code",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L58",
+      "id": "utils_storage_createevent",
+      "community": 0,
+      "norm_label": "createevent()"
+    },
+    {
+      "label": "incrementEventByMatch()",
+      "file_type": "code",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L86",
+      "id": "utils_storage_incrementeventbymatch",
+      "community": 0,
+      "norm_label": "incrementeventbymatch()"
+    },
+    {
+      "label": "resetEventCount()",
+      "file_type": "code",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L134",
+      "id": "utils_storage_reseteventcount",
+      "community": 0,
+      "norm_label": "reseteventcount()"
+    },
+    {
+      "label": "deleteEvent()",
+      "file_type": "code",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L164",
+      "id": "utils_storage_deleteevent",
+      "community": 0,
+      "norm_label": "deleteevent()"
+    },
+    {
+      "label": "generateId()",
+      "file_type": "code",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L179",
+      "id": "utils_storage_generateid",
+      "community": 0,
+      "norm_label": "generateid()"
+    },
+    {
+      "label": "formatDate()",
+      "file_type": "code",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L183",
+      "id": "utils_storage_formatdate",
+      "community": 4,
+      "norm_label": "formatdate()"
+    },
+    {
+      "label": "Vite Config",
+      "file_type": "code",
+      "source_file": "vite.config.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "viteconfig_viteconfig",
+      "community": 12,
+      "norm_label": "vite config"
+    },
+    {
+      "label": "App Component",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "app_app",
+      "community": 1,
+      "norm_label": "app component"
+    },
+    {
+      "label": "Main Entry Point",
+      "file_type": "code",
+      "source_file": "src/main.jsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "main_main",
+      "community": 1,
+      "norm_label": "main entry point"
+    },
+    {
+      "label": "CreateEvent Component",
+      "file_type": "code",
+      "source_file": "src/components/CreateEvent.jsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "createevent_createevent",
+      "community": 1,
+      "norm_label": "createevent component"
+    },
+    {
+      "label": "EventDetail Component",
+      "file_type": "code",
+      "source_file": "src/components/EventDetail.jsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "eventdetail_eventdetail",
+      "community": 1,
+      "norm_label": "eventdetail component"
+    },
+    {
+      "label": "EventList Component",
+      "file_type": "code",
+      "source_file": "src/components/EventList.jsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "eventlist_eventlist",
+      "community": 1,
+      "norm_label": "eventlist component"
+    },
+    {
+      "label": "Header Component",
+      "file_type": "code",
+      "source_file": "src/components/Header.jsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "header_header",
+      "community": 1,
+      "norm_label": "header component"
+    },
+    {
+      "label": "ManualEntry Component",
+      "file_type": "code",
+      "source_file": "src/components/ManualEntry.jsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "manualentry_manualentry",
+      "community": 3,
+      "norm_label": "manualentry component"
+    },
+    {
+      "label": "Scanner Component",
+      "file_type": "code",
+      "source_file": "src/components/Scanner.jsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "scanner_scanner",
+      "community": 3,
+      "norm_label": "scanner component"
+    },
+    {
+      "label": "Toast Component",
+      "file_type": "code",
+      "source_file": "src/components/Toast.jsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "toast_toast",
+      "community": 1,
+      "norm_label": "toast component"
+    },
+    {
+      "label": "Storage Utility",
+      "file_type": "code",
+      "source_file": "src/utils/storage.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "storage_storage",
+      "community": 3,
+      "norm_label": "storage utility"
+    },
+    {
+      "label": "loadEvents Function",
+      "file_type": "code",
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 40",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "storage_loadevents",
+      "community": 2,
+      "norm_label": "loadevents function"
+    },
+    {
+      "label": "createEvent Function",
+      "file_type": "code",
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 58",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "storage_createevent",
+      "community": 2,
+      "norm_label": "createevent function"
+    },
+    {
+      "label": "incrementEventByMatch Function",
+      "file_type": "code",
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 86",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "storage_incrementeventbymatch",
+      "community": 2,
+      "norm_label": "incrementeventbymatch function"
+    },
+    {
+      "label": "resetEventCount Function",
+      "file_type": "code",
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 134",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "storage_reseteventcount",
+      "community": 2,
+      "norm_label": "reseteventcount function"
+    },
+    {
+      "label": "deleteEvent Function",
+      "file_type": "code",
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 164",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "storage_deleteevent",
+      "community": 2,
+      "norm_label": "deleteevent function"
+    },
+    {
+      "label": "generateId Function",
+      "file_type": "code",
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 179",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "storage_generateid",
+      "community": 1,
+      "norm_label": "generateid function"
+    },
+    {
+      "label": "formatDate Function",
+      "file_type": "code",
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 183",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "storage_formatdate",
+      "community": 1,
+      "norm_label": "formatdate function"
+    },
+    {
+      "label": "isSupabaseConfigured Function",
+      "file_type": "code",
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 36",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "storage_issupbaseconfigured",
+      "community": 1,
+      "norm_label": "issupabaseconfigured function"
+    },
+    {
+      "label": "normalizeRow Function",
+      "file_type": "code",
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 26",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "storage_normalizerow",
+      "community": 2,
+      "norm_label": "normalizerow function"
+    },
+    {
+      "label": "loadLocalEvents Function",
+      "file_type": "code",
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 9",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "storage_loadlocalevents",
+      "community": 2,
+      "norm_label": "loadlocalevents function"
+    },
+    {
+      "label": "saveLocalEvents Function",
+      "file_type": "code",
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 18",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "storage_savelocalevents",
+      "community": 2,
+      "norm_label": "savelocalevents function"
+    },
+    {
+      "label": "Supabase with localStorage Fallback Pattern",
+      "file_type": "rationale",
+      "source_file": "src/utils/storage.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Design decision to keep localStorage as automatic fallback when Supabase env vars are missing or Supabase calls fail, ensuring the app always works offline without any code changes.",
+      "id": "storage_supabasefallback",
+      "community": 3,
+      "norm_label": "supabase with localstorage fallback pattern"
+    },
+    {
+      "label": "CLAUDE.md Project Documentation",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claudemd_claudemd",
+      "community": 3,
+      "norm_label": "claude.md project documentation"
+    },
+    {
+      "label": "README",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "readme_readme",
+      "community": 3,
+      "norm_label": "readme"
+    },
+    {
+      "label": "HTML Entry Point",
+      "file_type": "code",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "indexhtml_indexhtml",
+      "community": 1,
+      "norm_label": "html entry point"
+    },
+    {
+      "label": "QR Counter Favicon (Q letter on teal background)",
+      "file_type": "image",
+      "source_file": "public/favicon.svg",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "favicon_favicon",
+      "community": 1,
+      "norm_label": "qr counter favicon (q letter on teal background)"
+    },
+    {
+      "label": "Events Data Model (id, name, url, count, createdAt)",
+      "file_type": "rationale",
+      "source_file": "src/utils/storage.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "App-side event shape maps scan_count to count and created_at to createdAt, bridging Supabase snake_case columns to camelCase JS convention via normalizeRow.",
+      "id": "storage_eventsschema",
+      "community": 2,
+      "norm_label": "events data model (id, name, url, count, createdat)"
+    },
+    {
+      "label": "App View State Machine (list/create/scan/detail)",
+      "file_type": "rationale",
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "App uses a single view string in useState to switch between list, create, scan, and detail views, acting as a simple client-side router without a routing library.",
+      "id": "app_viewstatemachine",
+      "community": 1,
+      "norm_label": "app view state machine (list/create/scan/detail)"
+    },
+    {
+      "label": "Scanner Scan Cooldown Mechanism",
+      "file_type": "rationale",
+      "source_file": "src/components/Scanner.jsx",
+      "source_location": "line 7",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Uses a ref (not state) for cooldown flag so it does not trigger re-renders. A 2-second cooldown prevents duplicate scan increments from the same QR code.",
+      "id": "scanner_cooldownmechanism",
+      "community": 3,
+      "norm_label": "scanner scan cooldown mechanism"
+    }
+  ],
+  "links": [
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.jsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_app_jsx",
+      "target": "utils_storage_loadevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.jsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_app_jsx",
+      "target": "utils_storage_createevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.jsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_app_jsx",
+      "target": "utils_storage_incrementeventbymatch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.jsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_app_jsx",
+      "target": "utils_storage_reseteventcount",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.jsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_app_jsx",
+      "target": "utils_storage_deleteevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.jsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_app_jsx",
+      "target": "utils_storage_generateid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.jsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_app_jsx",
+      "target": "utils_storage_issupabaseconfigured",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.jsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "src_app_jsx",
+      "target": "src_app_app",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\App.jsx",
+      "source_location": "L129",
+      "weight": 1.0,
+      "source": "src_app_app",
+      "target": "utils_storage_issupabaseconfigured"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\CreateEvent.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_components_createevent_jsx",
+      "target": "components_createevent_createevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\EventDetail.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_components_eventdetail_jsx",
+      "target": "utils_storage_formatdate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\EventDetail.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_components_eventdetail_jsx",
+      "target": "components_eventdetail_eventdetail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\components\\EventDetail.jsx",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "components_eventdetail_eventdetail",
+      "target": "utils_storage_formatdate"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\EventList.jsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_components_eventlist_jsx",
+      "target": "utils_storage_formatdate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\EventList.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_components_eventlist_jsx",
+      "target": "components_eventlist_eventlist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\Header.jsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_components_header_jsx",
+      "target": "components_header_header",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ManualEntry.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_components_manualentry_jsx",
+      "target": "components_manualentry_manualentry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\Scanner.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_components_scanner_jsx",
+      "target": "components_scanner_scanner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\Toast.jsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_components_toast_jsx",
+      "target": "components_toast_toast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "src_utils_storage_js",
+      "target": "utils_storage_loadlocalevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "src_utils_storage_js",
+      "target": "utils_storage_savelocalevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "src_utils_storage_js",
+      "target": "utils_storage_normalizerow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "src_utils_storage_js",
+      "target": "utils_storage_issupabaseconfigured",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "src_utils_storage_js",
+      "target": "utils_storage_loadevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L58",
+      "weight": 1.0,
+      "source": "src_utils_storage_js",
+      "target": "utils_storage_createevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "src_utils_storage_js",
+      "target": "utils_storage_incrementeventbymatch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L134",
+      "weight": 1.0,
+      "source": "src_utils_storage_js",
+      "target": "utils_storage_reseteventcount",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L164",
+      "weight": 1.0,
+      "source": "src_utils_storage_js",
+      "target": "utils_storage_deleteevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L179",
+      "weight": 1.0,
+      "source": "src_utils_storage_js",
+      "target": "utils_storage_generateid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L183",
+      "weight": 1.0,
+      "source": "src_utils_storage_js",
+      "target": "utils_storage_formatdate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "utils_storage_loadevents",
+      "target": "utils_storage_loadlocalevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "utils_storage_createevent",
+      "target": "utils_storage_loadlocalevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "utils_storage_incrementeventbymatch",
+      "target": "utils_storage_loadlocalevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L136",
+      "weight": 1.0,
+      "source": "utils_storage_reseteventcount",
+      "target": "utils_storage_loadlocalevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L166",
+      "weight": 1.0,
+      "source": "utils_storage_deleteevent",
+      "target": "utils_storage_loadlocalevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "utils_storage_loadevents",
+      "target": "utils_storage_savelocalevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "utils_storage_createevent",
+      "target": "utils_storage_savelocalevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "utils_storage_incrementeventbymatch",
+      "target": "utils_storage_savelocalevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L145",
+      "weight": 1.0,
+      "source": "utils_storage_reseteventcount",
+      "target": "utils_storage_savelocalevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L168",
+      "weight": 1.0,
+      "source": "utils_storage_deleteevent",
+      "target": "utils_storage_savelocalevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "utils_storage_createevent",
+      "target": "utils_storage_normalizerow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L128",
+      "weight": 1.0,
+      "source": "utils_storage_incrementeventbymatch",
+      "target": "utils_storage_normalizerow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\utils\\storage.js",
+      "source_location": "L158",
+      "weight": 1.0,
+      "source": "utils_storage_reseteventcount",
+      "target": "utils_storage_normalizerow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/main.jsx",
+      "source_location": "line 6",
+      "weight": 1.0,
+      "source": "main_main",
+      "target": "app_app"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/App.jsx",
+      "source_location": "line 29",
+      "weight": 1.0,
+      "source": "app_app",
+      "target": "storage_loadevents"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/App.jsx",
+      "source_location": "line 57",
+      "weight": 1.0,
+      "source": "app_app",
+      "target": "storage_createevent"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/App.jsx",
+      "source_location": "line 71",
+      "weight": 1.0,
+      "source": "app_app",
+      "target": "storage_incrementeventbymatch"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/App.jsx",
+      "source_location": "line 102",
+      "weight": 1.0,
+      "source": "app_app",
+      "target": "storage_reseteventcount"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/App.jsx",
+      "source_location": "line 89",
+      "weight": 1.0,
+      "source": "app_app",
+      "target": "storage_deleteevent"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/App.jsx",
+      "source_location": "line 49",
+      "weight": 1.0,
+      "source": "app_app",
+      "target": "storage_generateid"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/App.jsx",
+      "source_location": "line 129",
+      "weight": 1.0,
+      "source": "app_app",
+      "target": "storage_issupbaseconfigured"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/App.jsx",
+      "source_location": "line 116",
+      "weight": 1.0,
+      "source": "app_app",
+      "target": "header_header"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/App.jsx",
+      "source_location": "line 137",
+      "weight": 1.0,
+      "source": "app_app",
+      "target": "eventlist_eventlist"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/App.jsx",
+      "source_location": "line 147",
+      "weight": 1.0,
+      "source": "app_app",
+      "target": "createevent_createevent"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/App.jsx",
+      "source_location": "line 150",
+      "weight": 1.0,
+      "source": "app_app",
+      "target": "scanner_scanner"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/App.jsx",
+      "source_location": "line 158",
+      "weight": 1.0,
+      "source": "app_app",
+      "target": "eventdetail_eventdetail"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/App.jsx",
+      "source_location": "line 167",
+      "weight": 1.0,
+      "source": "app_app",
+      "target": "toast_toast"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "src/App.jsx",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "app_viewstatemachine",
+      "target": "app_app"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claudemd_claudemd",
+      "target": "app_app"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 13",
+      "weight": 1.0,
+      "source": "indexhtml_indexhtml",
+      "target": "main_main"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.65,
+      "source_file": "src/components/CreateEvent.jsx",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "createevent_createevent",
+      "target": "eventdetail_eventdetail"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/EventDetail.jsx",
+      "source_location": "line 47",
+      "weight": 1.0,
+      "source": "eventdetail_eventdetail",
+      "target": "storage_formatdate"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/EventList.jsx",
+      "source_location": "line 36",
+      "weight": 1.0,
+      "source": "eventlist_eventlist",
+      "target": "storage_formatdate"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/Scanner.jsx",
+      "source_location": "line 100",
+      "weight": 1.0,
+      "source": "scanner_scanner",
+      "target": "manualentry_manualentry"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/components/ManualEntry.jsx",
+      "source_location": "line 22",
+      "weight": 1.0,
+      "source": "manualentry_manualentry",
+      "target": "storage_incrementeventbymatch"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/Scanner.jsx",
+      "source_location": "line 25",
+      "weight": 1.0,
+      "source": "scanner_scanner",
+      "target": "storage_incrementeventbymatch"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "src/components/Scanner.jsx",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "scanner_cooldownmechanism",
+      "target": "scanner_scanner"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claudemd_claudemd",
+      "target": "scanner_scanner"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "src/utils/storage.js",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "storage_supabasefallback",
+      "target": "storage_storage"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claudemd_claudemd",
+      "target": "storage_storage"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "readme_readme",
+      "target": "storage_storage"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 41",
+      "weight": 1.0,
+      "source": "storage_loadevents",
+      "target": "storage_loadlocalevents"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 54",
+      "weight": 1.0,
+      "source": "storage_loadevents",
+      "target": "storage_savelocalevents"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 53",
+      "weight": 1.0,
+      "source": "storage_loadevents",
+      "target": "storage_normalizerow"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 60",
+      "weight": 1.0,
+      "source": "storage_createevent",
+      "target": "storage_loadlocalevents"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 63",
+      "weight": 1.0,
+      "source": "storage_createevent",
+      "target": "storage_savelocalevents"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 80",
+      "weight": 1.0,
+      "source": "storage_createevent",
+      "target": "storage_normalizerow"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 88",
+      "weight": 1.0,
+      "source": "storage_incrementeventbymatch",
+      "target": "storage_loadlocalevents"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 97",
+      "weight": 1.0,
+      "source": "storage_incrementeventbymatch",
+      "target": "storage_savelocalevents"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 128",
+      "weight": 1.0,
+      "source": "storage_incrementeventbymatch",
+      "target": "storage_normalizerow"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 135",
+      "weight": 1.0,
+      "source": "storage_reseteventcount",
+      "target": "storage_loadlocalevents"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 144",
+      "weight": 1.0,
+      "source": "storage_reseteventcount",
+      "target": "storage_savelocalevents"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 158",
+      "weight": 1.0,
+      "source": "storage_reseteventcount",
+      "target": "storage_normalizerow"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 165",
+      "weight": 1.0,
+      "source": "storage_deleteevent",
+      "target": "storage_loadlocalevents"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/storage.js",
+      "source_location": "line 167",
+      "weight": 1.0,
+      "source": "storage_deleteevent",
+      "target": "storage_savelocalevents"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "src/utils/storage.js",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "storage_eventsschema",
+      "target": "storage_normalizerow"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/utils/storage.js",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "storage_loadlocalevents",
+      "target": "storage_savelocalevents"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 9",
+      "weight": 1.0,
+      "source": "indexhtml_indexhtml",
+      "target": "favicon_favicon"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "storage_crud_pattern",
+      "label": "Supabase CRUD with localStorage Cache Pattern",
+      "nodes": [
+        "storage_loadevents",
+        "storage_createevent",
+        "storage_incrementeventbymatch",
+        "storage_reseteventcount",
+        "storage_deleteevent"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "src/utils/storage.js"
+    },
+    {
+      "id": "app_event_lifecycle",
+      "label": "App Event Lifecycle (create, scan, display, delete)",
+      "nodes": [
+        "app_app",
+        "storage_storage",
+        "scanner_scanner"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/App.jsx"
+    },
+    {
+      "id": "local_cache_sync",
+      "label": "Local Cache Sync (load, normalize, save)",
+      "nodes": [
+        "storage_normalizerow",
+        "storage_loadlocalevents",
+        "storage_savelocalevents"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "src/utils/storage.js"
+    }
+  ]
+}
